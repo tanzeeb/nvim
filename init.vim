@@ -1,8 +1,16 @@
 call plug#begin('~/.local/share/nvim/bundle')
 Plug 'chriskempson/base16-vim'
+
 Plug 'tpope/vim-sensible'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'bronson/vim-trailing-whitespace'
+
+Plug 'sheerun/vim-polyglot'
+Plug 'scrooloose/nerdcommenter'
+
 Plug 'airblade/vim-gitgutter'
 Plug 'tpope/vim-fugitive'
+
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 call plug#end()
