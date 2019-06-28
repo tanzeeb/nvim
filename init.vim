@@ -16,6 +16,8 @@ call plug#begin('~/.local/share/nvim/bundle')
 
 	Plug 'vim-airline/vim-airline'
 	Plug 'vim-airline/vim-airline-themes'
+
+	Plug 'majutsushi/tagbar'
 call plug#end()
 
 set mouse=a
@@ -36,3 +38,4 @@ colorscheme base16-tomorrow-night
 let g:airline_theme='base16_tomorrow'
 
 map <leader>n :NERDTreeToggle<CR>
+map <leader>t :TagbarToggle<CR>
