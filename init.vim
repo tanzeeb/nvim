@@ -5,6 +5,7 @@ call plug#begin('~/.local/share/nvim/bundle')
 	Plug 'terryma/vim-multiple-cursors'
 	Plug 'bronson/vim-trailing-whitespace'
 	Plug 'yuttie/comfortable-motion.vim'
+	Plug 'easymotion/vim-easymotion'
 
 	Plug 'sheerun/vim-polyglot'
 	Plug 'scrooloose/nerdcommenter'
