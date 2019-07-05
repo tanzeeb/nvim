@@ -26,6 +26,7 @@ set mouse=a
 set hidden
 set nobackup
 set noswapfile
+set updatetime=300
 
 set number
 set nowrap
@@ -41,3 +42,32 @@ let g:airline_theme='base16_tomorrow'
 
 map <leader>n :NERDTreeToggle<CR>
 map <leader>t :TagbarToggle<CR>
+
+let g:go_fmt_command="goimports"
+let g:go_metalinter_command="golangci-lint"
+let g:go_info_mode="guru"
+let g:go_def_mode="guru"
+
+let g:go_highlight_variable_assignments=1
+let g:go_highlight_variable_declarations=1
+let g:go_highlight_generate_tags=1
+let g:go_highlight_build_constraints=1
+let g:go_highlight_fields=1
+let g:go_highlight_types=1
+let g:go_highlight_function_calls=1
+let g:go_highlight_function_arguments=1
+let g:go_highlight_functions=1
+let g:go_highlight_operators=1
+let g:go_highlight_trailing_whitespace_error=1
+let g:go_highlight_space_tab_error=1
+let g:go_highlight_extra_types=1
+let g:go_highlight_chan_whitespace_error=1
+let g:go_highlight_array_whitespace_error=1
+
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter *
+	\ if argc() == 0 && !exists("s:std_in") |
+	\   NERDTree |
+	\ elseif argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
+	\	  exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] |
+	\ endif
