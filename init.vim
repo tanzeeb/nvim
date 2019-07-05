@@ -78,7 +78,7 @@ fun! s:UseGoPls()
 		let g:go_def_mode="godef"
 	endif
 endfun
-autocmd BufWinEnter *.go call s:UseGoPls()
+autocmd BufEnter *.go call s:UseGoPls()
 
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter *
