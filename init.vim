@@ -22,6 +22,11 @@ call plug#begin('~/.local/share/nvim/bundle')
 	Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 
+autocmd VimEnter *
+  \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \|   PlugInstall --sync | q
+  \| endif
+
 set mouse=a
 set hidden
 set nobackup
@@ -46,6 +51,7 @@ map <leader>t :TagbarToggle<CR>
 
 let g:go_fmt_command="goimports"
 let g:go_metalinter_command="golangci-lint"
+let g:go_echo_command_info=0
 
 let g:go_highlight_variable_assignments=1
 let g:go_highlight_variable_declarations=1
