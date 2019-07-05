@@ -26,6 +26,7 @@ set mouse=a
 set hidden
 set nobackup
 set noswapfile
+set nowritebackup
 set updatetime=300
 
 set number
@@ -45,8 +46,6 @@ map <leader>t :TagbarToggle<CR>
 
 let g:go_fmt_command="goimports"
 let g:go_metalinter_command="golangci-lint"
-let g:go_info_mode="guru"
-let g:go_def_mode="guru"
 
 let g:go_highlight_variable_assignments=1
 let g:go_highlight_variable_declarations=1
@@ -64,6 +63,17 @@ let g:go_highlight_extra_types=1
 let g:go_highlight_chan_whitespace_error=1
 let g:go_highlight_array_whitespace_error=1
 
+fun! s:UseGoPls()
+	if match(getline(1),'+build') == -1
+		let g:go_info_mode="gopls"
+		let g:go_def_mode="gopls"
+	else
+		let g:go_info_mode="gocode"
+		let g:go_def_mode="godef"
+	endif
+endfun
+autocmd BufWinEnter *.go call s:UseGoPls()
+
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter *
 	\ if argc() == 0 && !exists("s:std_in") |
@@ -71,3 +81,4 @@ autocmd VimEnter *
 	\ elseif argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
 	\	  exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] |
 	\ endif
+
