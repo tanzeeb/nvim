@@ -4,6 +4,7 @@ call plug#begin('~/.local/share/nvim/bundle')
 	Plug 'tpope/vim-sensible'
 	Plug 'terryma/vim-multiple-cursors'
 	Plug 'bronson/vim-trailing-whitespace'
+	Plug 'yuttie/comfortable-motion.vim'
 
 	Plug 'sheerun/vim-polyglot'
 	Plug 'scrooloose/nerdcommenter'
@@ -87,4 +88,13 @@ autocmd VimEnter *
 	\ elseif argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
 	\	  exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] |
 	\ endif
+
+let g:comfortable_motion_no_default_key_mappings = 1
+let g:comfortable_motion_impulse_multiplier = 1  " Feel free to increase/decrease this value.
+nnoremap <silent> <C-d> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 2)<CR>
+nnoremap <silent> <C-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -2)<CR>
+nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 4)<CR>
+nnoremap <silent> <C-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -4)<CR>
+noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1)<CR>
+noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<CR>
 
