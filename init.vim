@@ -19,13 +19,10 @@ call plug#begin('~/.local/share/nvim/bundle')
 
 	Plug 'majutsushi/tagbar'
 
-	Plug 'w0rp/ale'
-
 	Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 call plug#end()
 
 set mouse=a
-
 set hidden
 set nobackup
 set noswapfile
@@ -44,8 +41,3 @@ let g:airline_theme='base16_tomorrow'
 
 map <leader>n :NERDTreeToggle<CR>
 map <leader>t :TagbarToggle<CR>
-
-let g:airline#extensions#ale#enabled = 1
-let g:ale_linters = {
-	\ 'go': ['gopls', 'golangci-lint'],
-	\}
