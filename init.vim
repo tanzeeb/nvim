@@ -29,6 +29,8 @@ call plug#begin('~/.local/share/nvim/bundle')
 	Plug 'majutsushi/tagbar'
 
 	Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+
+	Plug 'w0rp/ale'
 call plug#end()
 
 autocmd VimEnter *
@@ -36,6 +38,7 @@ autocmd VimEnter *
   \|   PlugInstall --sync | q
   \| endif
 
+set shell=sh
 set mouse=a
 set hidden
 set nobackup
@@ -52,10 +55,11 @@ set tabstop=2
 set autoindent
 set smartindent
 
+let base16colorspace=256
 colorscheme base16-tomorrow-night
 let g:airline_theme='base16_tomorrow'
 
-noremap <leader>r :source $MYVIMRC<CR>
+noremap <silent> <leader>r :source $MYVIMRC<CR>:do VimEnter *<CR>
 noremap <leader>n :NERDTreeToggle<CR>
 noremap <leader>t :TagbarToggle<CR>
 
@@ -79,6 +83,14 @@ let g:go_highlight_extra_types=1
 let g:go_highlight_chan_whitespace_error=1
 let g:go_highlight_array_whitespace_error=1
 
+let g:ale_linters = {
+	\	'go': ['golangci-lint', 'gopls', 'gobuild', 'farkwad']
+\	}
+let g:ale_sign_error = "x"
+let g:ale_sign_warning = "x"
+highlight link ALEErrorSign GitGutterDelete
+highlight link ALEWarningSign GitGutterChangeDelete
+
 fun! s:UseGoPls()
 	if match(getline(1),'+build') == -1
 		let g:go_info_mode="gopls"
@@ -99,7 +111,7 @@ autocmd VimEnter *
 	\ endif
 
 let g:comfortable_motion_no_default_key_mappings = 1
-let g:comfortable_motion_impulse_multiplier = 0.3  " Feel free to increase/decrease this value.
+let g:comfortable_motion_impulse_multiplier = 0.5  " Feel free to increase/decrease this value.
 nnoremap <silent> <C-d> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 2)<CR>
 nnoremap <silent> <C-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -2)<CR>
 nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 4)<CR>
@@ -107,3 +119,16 @@ nnoremap <silent> <C-b> :call comfortable_motion#flick(g:comfortable_motion_impu
 noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1)<CR>
 noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<CR>
 
+let NERDTreeAutoDeleteBuffer = 1
+let g:NERDTreeIndicatorMapCustom = {
+    \ "Modified"  : "~",
+    \ "Staged"    : "✚",
+    \ "Untracked" : "✭",
+    \ "Renamed"   : "➜",
+    \ "Unmerged"  : "═",
+    \ "Deleted"   : "-",
+    \ "Dirty"     : "*",
+    \ "Clean"     : "✔︎",
+    \ 'Ignored'   : '.',
+    \ "Unknown"   : "?"
+    \ }
