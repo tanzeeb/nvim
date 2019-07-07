@@ -10,6 +10,8 @@ call plug#begin('~/.local/share/nvim/bundle')
 	Plug 'tpope/vim-sensible'
 	Plug 'terryma/vim-multiple-cursors'
 	Plug 'bronson/vim-trailing-whitespace'
+	Plug 'tpope/vim-surround'
+
 	Plug 'yuttie/comfortable-motion.vim'
 	Plug 'easymotion/vim-easymotion'
 
@@ -55,7 +57,7 @@ set tabstop=2
 set autoindent
 set smartindent
 
-"let base16colorspace=256
+let base16colorspace=256
 colorscheme base16-tomorrow-night
 let g:airline_theme='base16_tomorrow'
 
