@@ -18,6 +18,7 @@ call plug#begin('~/.local/share/nvim/bundle')
 
 	Plug 'airblade/vim-gitgutter'
 	Plug 'tpope/vim-fugitive'
+	Plug 'junegunn/gv.vim'
 
 	Plug 'scrooloose/nerdtree'
 	Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -54,9 +55,9 @@ set smartindent
 colorscheme base16-tomorrow-night
 let g:airline_theme='base16_tomorrow'
 
-map <leader>r :source $MYVIMRC<CR>
-map <leader>n :NERDTreeToggle<CR>
-map <leader>t :TagbarToggle<CR>
+noremap <leader>r :source $MYVIMRC<CR>
+noremap <leader>n :NERDTreeToggle<CR>
+noremap <leader>t :TagbarToggle<CR>
 
 let g:go_fmt_command="goimports"
 let g:go_metalinter_command="golangci-lint"
