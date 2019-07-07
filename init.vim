@@ -1,3 +1,9 @@
+if empty(glob('~/.config/nvim/autoload/plug.vim'))
+  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC | q
+endif
+
 call plug#begin('~/.local/share/nvim/bundle')
 	Plug 'chriskempson/base16-vim'
 
@@ -48,6 +54,7 @@ set smartindent
 colorscheme base16-tomorrow-night
 let g:airline_theme='base16_tomorrow'
 
+map <leader>r :source $MYVIMRC<CR>
 map <leader>n :NERDTreeToggle<CR>
 map <leader>t :TagbarToggle<CR>
 
@@ -91,7 +98,7 @@ autocmd VimEnter *
 	\ endif
 
 let g:comfortable_motion_no_default_key_mappings = 1
-let g:comfortable_motion_impulse_multiplier = 1  " Feel free to increase/decrease this value.
+let g:comfortable_motion_impulse_multiplier = 0.3  " Feel free to increase/decrease this value.
 nnoremap <silent> <C-d> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 2)<CR>
 nnoremap <silent> <C-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -2)<CR>
 nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 4)<CR>
