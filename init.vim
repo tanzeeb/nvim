@@ -55,7 +55,7 @@ set tabstop=2
 set autoindent
 set smartindent
 
-let base16colorspace=256
+"let base16colorspace=256
 colorscheme base16-tomorrow-night
 let g:airline_theme='base16_tomorrow'
 
@@ -84,8 +84,8 @@ let g:go_highlight_chan_whitespace_error=1
 let g:go_highlight_array_whitespace_error=1
 
 let g:ale_linters = {
-	\	'go': ['golangci-lint', 'gopls', 'gobuild', 'farkwad']
-\	}
+	\		'go': ['golangci-lint', 'gopls', 'gobuild', 'farkwad']
+	\	}
 let g:ale_sign_error = "x"
 let g:ale_sign_warning = "x"
 highlight link ALEErrorSign GitGutterDelete
@@ -121,14 +121,13 @@ noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(g:comfortable_
 
 let NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeIndicatorMapCustom = {
-    \ "Modified"  : "~",
-    \ "Staged"    : "✚",
-    \ "Untracked" : "✭",
-    \ "Renamed"   : "➜",
-    \ "Unmerged"  : "═",
-    \ "Deleted"   : "-",
-    \ "Dirty"     : "*",
-    \ "Clean"     : "✔︎",
-    \ 'Ignored'   : '.',
-    \ "Unknown"   : "?"
-    \ }
+	\ "Modified"  : "~",
+	\ "Staged"    : "✚",
+	\ "Untracked" : "✭",
+	\ "Renamed"   : "➜",
+	\ "Unmerged"  : "═",
+	\ "Deleted"   : "-",
+	\ "Dirty"     : "*",
+	\ "Clean"     : "✔︎",
+	\ "Unknown"   : "?"
+	\ }
