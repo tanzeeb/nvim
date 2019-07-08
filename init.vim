@@ -11,6 +11,8 @@ call plug#begin('~/.local/share/nvim/bundle')
 	Plug 'terryma/vim-multiple-cursors'
 	Plug 'bronson/vim-trailing-whitespace'
 	Plug 'tpope/vim-surround'
+	Plug 'tpope/vim-repeat'
+	Plug 'AndrewRadev/splitjoin.vim'
 
 	Plug 'yuttie/comfortable-motion.vim'
 	Plug 'easymotion/vim-easymotion'
@@ -143,3 +145,7 @@ let g:NERDTreeIndicatorMapCustom = {
 	\ "Unknown"   : "?"
 	\ }
 
+let g:splitjoin_split_mapping = ''
+let g:splitjoin_join_mapping = ''
+nmap sk :SplitjoinSplit<cr>
+nmap sj :SplitjoinJoin<cr>
