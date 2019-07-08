@@ -90,11 +90,13 @@ let g:go_highlight_array_whitespace_error=1
 let g:ale_linters = {
 	\		'go': ['gobuild', 'gopls', 'golangci-lint']
 	\	}
-let g:ale_go_golangci_lint_options = '--fast --enable-all --disable errcheck,gofmt,goimports,golint,dupl,lll,nakedret,gochecknoglobals,typecheck'
+let g:ale_go_golangci_lint_options = '--fast --enable-all --disable errcheck,gofmt,goimports,dupl,lll,nakedret,gochecknoglobals,typecheck'
 let g:ale_sign_error = "*"
 let g:ale_sign_warning = "*"
 highlight link ALEErrorSign GitGutterDelete
 highlight link ALEWarningSign GitGutterChangeDelete
+
+set omnifunc=ale#completion#OmniFunc
 
 fun! s:UseGoPls()
 	if match(getline(1),'+build') == -1
