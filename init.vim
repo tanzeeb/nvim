@@ -64,6 +64,8 @@ let g:airline_theme='base16_tomorrow'
 noremap <silent> <leader>r :source $MYVIMRC<CR>:do VimEnter *<CR>
 noremap <leader>n :NERDTreeToggle<CR>
 noremap <leader>t :TagbarToggle<CR>
+noremap <leader>g :GitGutterToggle<CR>
+noremap <leader>l :ALEToggle<CR>
 
 let g:go_fmt_command="goimports"
 let g:go_metalinter_command="golangci-lint"
@@ -86,10 +88,11 @@ let g:go_highlight_chan_whitespace_error=1
 let g:go_highlight_array_whitespace_error=1
 
 let g:ale_linters = {
-	\		'go': ['golangci-lint', 'gopls', 'gobuild', 'farkwad']
+	\		'go': ['gobuild', 'gopls', 'golangci-lint']
 	\	}
-let g:ale_sign_error = "x"
-let g:ale_sign_warning = "x"
+let g:ale_go_golangci_lint_options = '--fast --enable-all --disable errcheck,gofmt,goimports,golint,dupl,lll,nakedret,gochecknoglobals,typecheck'
+let g:ale_sign_error = "*"
+let g:ale_sign_warning = "*"
 highlight link ALEErrorSign GitGutterDelete
 highlight link ALEWarningSign GitGutterChangeDelete
 
@@ -133,3 +136,4 @@ let g:NERDTreeIndicatorMapCustom = {
 	\ "Clean"     : "✔︎",
 	\ "Unknown"   : "?"
 	\ }
+
