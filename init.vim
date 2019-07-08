@@ -35,6 +35,9 @@ call plug#begin('~/.local/share/nvim/bundle')
 	Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 	Plug 'w0rp/ale'
+
+	Plug 'junegunn/fzf', { 'dir': '~/.local/share/fzf/', 'do': './install --bin' }
+	Plug 'junegunn/fzf.vim'
 call plug#end()
 
 autocmd VimEnter *
@@ -61,13 +64,17 @@ set smartindent
 
 let base16colorspace=256
 colorscheme base16-tomorrow-night
-let g:airline_theme='base16_tomorrow'
+let g:airline_theme='base16_vim'
 
 noremap <silent> <leader>r :source $MYVIMRC<CR>:do VimEnter *<CR>
 noremap <leader>n :NERDTreeToggle<CR>
 noremap <leader>t :TagbarToggle<CR>
 noremap <leader>g :GitGutterToggle<CR>
 noremap <leader>l :ALEToggle<CR>
+noremap <leader>p :Files<CR>
+noremap <leader>f :Rg <C-R><C-W><CR>
+noremap <leader>F :Rg <C-R><C-A><CR>
+vnoremap <leader>f y:Rg <C-R>"<CR>
 
 let g:go_fmt_command="goimports"
 let g:go_metalinter_command="golangci-lint"
@@ -149,3 +156,26 @@ let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
 nmap sk :SplitjoinSplit<cr>
 nmap sj :SplitjoinJoin<cr>
+
+let g:fzf_colors = {
+	\ 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Comment'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Comment']
+	\ }
+command! -bang -nargs=? -complete=dir Files
+  \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:50%', '?'), <bang>0)
+command! -bang -nargs=* Rg
+	\ call fzf#vim#grep(
+	\   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+	\		fzf#vim#with_preview('right:50%', '?'),
+	\   <bang>0)
