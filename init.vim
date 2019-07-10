@@ -45,7 +45,6 @@ autocmd VimEnter *
   \|   PlugInstall --sync | q
   \| endif
 
-set shell=sh
 set mouse=a
 set hidden
 set nobackup
@@ -62,6 +61,8 @@ set tabstop=2
 set autoindent
 set smartindent
 
+set t_Co=256
+set termguicolors
 let base16colorspace=256
 colorscheme base16-tomorrow-night
 let g:airline_theme='base16_vim'
@@ -174,7 +175,7 @@ let g:fzf_colors = {
 	\ }
 command! -bang -nargs=? -complete=dir Files
   \ call fzf#vim#files(<q-args>, fzf#vim#with_preview('right:50%', '?'), <bang>0)
-command! -bang -nargs=* Rg
+command! -bang -nargs=+ Rg
 	\ call fzf#vim#grep(
 	\   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
 	\		fzf#vim#with_preview('right:50%', '?'),
