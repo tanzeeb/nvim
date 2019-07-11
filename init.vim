@@ -61,7 +61,6 @@ set tabstop=2
 set autoindent
 set smartindent
 
-set t_Co=256
 set termguicolors
 let base16colorspace=256
 colorscheme base16-tomorrow-night
