@@ -26,6 +26,7 @@ call plug#begin('~/.local/share/nvim/bundle')
 
 	Plug 'scrooloose/nerdtree'
 	Plug 'Xuyuanp/nerdtree-git-plugin'
+	Plug 'tpope/vim-vinegar'
 
 	Plug 'vim-airline/vim-airline'
 	Plug 'vim-airline/vim-airline-themes'
@@ -71,7 +72,7 @@ noremap <leader>n :NERDTreeToggle<CR>
 noremap <leader>t :TagbarToggle<CR>
 noremap <leader>g :GitGutterToggle<CR>
 noremap <leader>l :ALEToggle<CR>
-noremap <leader>p :Files<CR>
+noremap <leader><space> :Files<CR>
 noremap <leader>f :Rg <C-R><C-W><CR>
 noremap <leader>F :Rg <C-R><C-A><CR>
 vnoremap <leader>f y:Rg <C-R>"<CR>
@@ -96,17 +97,6 @@ let g:go_highlight_extra_types=1
 let g:go_highlight_chan_whitespace_error=1
 let g:go_highlight_array_whitespace_error=1
 
-let g:ale_linters = {
-	\		'go': ['gobuild', 'gopls', 'golangci-lint']
-	\	}
-let g:ale_go_golangci_lint_options = '--fast --enable-all --disable errcheck,gofmt,goimports,dupl,lll,nakedret,gochecknoglobals,typecheck'
-let g:ale_sign_error = "*"
-let g:ale_sign_warning = "*"
-highlight link ALEErrorSign GitGutterDelete
-highlight link ALEWarningSign GitGutterChangeDelete
-
-set omnifunc=ale#completion#OmniFunc
-
 fun! s:UseGoPls()
 	if match(getline(1),'+build') == -1
 		let g:go_info_mode="gopls"
@@ -118,6 +108,16 @@ fun! s:UseGoPls()
 endfun
 autocmd BufEnter *.go call s:UseGoPls()
 
+
+let g:ale_linters = {
+	\		'go': ['gobuild', 'gopls', 'golangci-lint']
+	\	}
+let g:ale_go_golangci_lint_options = '--fast --enable-all --disable errcheck,gofmt,goimports,dupl,lll,nakedret,gochecknoglobals,typecheck'
+let g:ale_sign_error = "*"
+let g:ale_sign_warning = "*"
+highlight link ALEErrorSign GitGutterDelete
+highlight link ALEWarningSign GitGutterChangeDelete
+
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter *
 	\ if argc() == 0 && !exists("s:std_in") |
@@ -125,6 +125,18 @@ autocmd VimEnter *
 	\ elseif argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
 	\	  exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] |
 	\ endif
+let NERDTreeAutoDeleteBuffer = 1
+let g:NERDTreeIndicatorMapCustom = {
+	\ "Modified"  : "~",
+	\ "Staged"    : "✚",
+	\ "Untracked" : "✭",
+	\ "Renamed"   : "➜",
+	\ "Unmerged"  : "═",
+	\ "Deleted"   : "-",
+	\ "Dirty"     : "*",
+	\ "Clean"     : "✔︎",
+	\ "Unknown"   : "?"
+	\ }
 
 let g:comfortable_motion_no_default_key_mappings = 1
 let g:comfortable_motion_impulse_multiplier = 0.5  " Feel free to increase/decrease this value.
@@ -138,19 +150,6 @@ nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impu
 nnoremap <silent> <C-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -4)<CR>
 noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1)<CR>
 noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<CR>
-
-let NERDTreeAutoDeleteBuffer = 1
-let g:NERDTreeIndicatorMapCustom = {
-	\ "Modified"  : "~",
-	\ "Staged"    : "✚",
-	\ "Untracked" : "✭",
-	\ "Renamed"   : "➜",
-	\ "Unmerged"  : "═",
-	\ "Deleted"   : "-",
-	\ "Dirty"     : "*",
-	\ "Clean"     : "✔︎",
-	\ "Unknown"   : "?"
-	\ }
 
 let g:splitjoin_split_mapping = ''
 let g:splitjoin_join_mapping = ''
