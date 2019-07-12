@@ -125,6 +125,7 @@ autocmd VimEnter *
 	\ elseif argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
 	\	  exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] |
 	\ endif
+
 let NERDTreeAutoDeleteBuffer = 1
 let g:NERDTreeIndicatorMapCustom = {
 	\ "Modified"  : "~",
@@ -139,7 +140,7 @@ let g:NERDTreeIndicatorMapCustom = {
 	\ }
 
 let g:comfortable_motion_no_default_key_mappings = 1
-let g:comfortable_motion_impulse_multiplier = 0.5  " Feel free to increase/decrease this value.
+let g:comfortable_motion_impulse_multiplier = 0.5
 let g:comfortable_motion_friction = 0.0
 let g:comfortable_motion_air_drag = 4.0
 nnoremap <silent> <C-j> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1)<CR>
