@@ -56,11 +56,16 @@ set updatetime=300
 set number
 set nowrap
 set termguicolors
+set backspace=indent,eol,start
 
 set shiftwidth=2
 set tabstop=2
+set expandtab
 set autoindent
 set smartindent
+
+set list
+set listchars=tab:\ \ ,extends:›,precedes:‹,nbsp:·,trail:·
 
 set termguicolors
 let base16colorspace=256
@@ -112,7 +117,7 @@ autocmd BufEnter *.go call s:UseGoPls()
 let g:ale_linters = {
 	\		'go': ['gobuild', 'gopls', 'golangci-lint']
 	\	}
-let g:ale_go_golangci_lint_options = '--fast --enable-all --disable errcheck,gofmt,goimports,dupl,lll,nakedret,gochecknoglobals,typecheck'
+let g:ale_go_golangci_lint_options = '--fast --enable-all --disable errcheck,gofmt,goimports,dupl,lll,nakedret,gochecknoglobals,typecheck,gochecknoinits'
 let g:ale_sign_error = "*"
 let g:ale_sign_warning = "*"
 highlight link ALEErrorSign GitGutterDelete
@@ -127,6 +132,7 @@ autocmd VimEnter *
 	\ endif
 
 let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeMouseMode = 3
 let g:NERDTreeIndicatorMapCustom = {
 	\ "Modified"  : "~",
 	\ "Staged"    : "✚",
@@ -134,7 +140,7 @@ let g:NERDTreeIndicatorMapCustom = {
 	\ "Renamed"   : "➜",
 	\ "Unmerged"  : "═",
 	\ "Deleted"   : "-",
-	\ "Dirty"     : "*",
+	\ "Dirty"     : "·",
 	\ "Clean"     : "✔︎",
 	\ "Unknown"   : "?"
 	\ }
