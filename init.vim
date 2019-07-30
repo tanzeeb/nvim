@@ -17,6 +17,8 @@ call plug#begin('~/.local/share/nvim/bundle')
 	Plug 'yuttie/comfortable-motion.vim'
 	Plug 'easymotion/vim-easymotion'
 
+  Plug 'milkypostman/vim-togglelist'
+
 	Plug 'sheerun/vim-polyglot'
 	Plug 'scrooloose/nerdcommenter'
 
@@ -33,12 +35,19 @@ call plug#begin('~/.local/share/nvim/bundle')
 
 	Plug 'majutsushi/tagbar'
 
-	Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+	"Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
-	Plug 'w0rp/ale'
+	"Plug 'w0rp/ale'
+
+  Plug 'autozimu/LanguageClient-neovim', {
+    \ 'branch': 'next',
+    \ 'do': 'bash install.sh',
+    \ }
 
 	Plug 'junegunn/fzf', { 'dir': '~/.local/share/fzf/', 'do': './install --bin' }
 	Plug 'junegunn/fzf.vim'
+
+  Plug 'lifepillar/vim-mucomplete'
 call plug#end()
 
 autocmd VimEnter *
@@ -67,6 +76,8 @@ set smartindent
 set list
 set listchars=tab:\ \ ,extends:›,precedes:‹,nbsp:·,trail:·
 
+set signcolumn=yes
+
 set termguicolors
 let base16colorspace=256
 colorscheme base16-tomorrow-night
@@ -76,7 +87,7 @@ noremap <silent> <leader>r :source $MYVIMRC<CR>:do VimEnter *<CR>
 noremap <leader>n :NERDTreeToggle<CR>
 noremap <leader>t :TagbarToggle<CR>
 noremap <leader>g :GitGutterToggle<CR>
-noremap <leader>l :ALEToggle<CR>
+"noremap <leader>l :ALEToggle<CR>
 noremap <leader><space> :Files<CR>
 noremap <leader>f :Rg <C-R><C-W><CR>
 noremap <leader>F :Rg <C-R><C-A><CR>
@@ -185,3 +196,23 @@ command! -bang -nargs=+ Rg
 	\   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
 	\		fzf#vim#with_preview('right:50%', '?'),
 	\   <bang>0)
+
+let g:LanguageClient_serverCommands = {
+       \ 'go': ['gopls']
+       \ }
+let g:LanguageClient_useVirtualText = 0
+autocmd BufWritePre *.go :call LanguageClient#textDocument_formatting_sync()
+nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
+nnoremap <silent> gt :call LanguageClient#textDocument_typeDefinition()<CR>
+nnoremap <silent> gi :call LanguageClient#textDocument_hover()<CR>
+noremap <leader>rn :call LanguageClient#textDocument_rename()<CR>
+
+set completeopt+=menuone
+set completeopt+=noinsert
+set shortmess+=c
+set belloff+=ctrlg
+inoremap <expr> <CR> (pumvisible() ? "\<c-y>" : "\<CR>")
+let g:mucomplete#enable_auto_at_startup = 0
+let g:mucomplete#minimum_prefix_length = 0
+let g:mucomplete#completion_delay = 50
+let g:mucomplete#reopen_immediately = 0
