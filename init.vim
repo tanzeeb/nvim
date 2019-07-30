@@ -46,8 +46,6 @@ call plug#begin('~/.local/share/nvim/bundle')
 
 	Plug 'junegunn/fzf', { 'dir': '~/.local/share/fzf/', 'do': './install --bin' }
 	Plug 'junegunn/fzf.vim'
-
-  Plug 'lifepillar/vim-mucomplete'
 call plug#end()
 
 autocmd VimEnter *
@@ -200,19 +198,10 @@ command! -bang -nargs=+ Rg
 let g:LanguageClient_serverCommands = {
        \ 'go': ['gopls']
        \ }
-let g:LanguageClient_useVirtualText = 0
+let g:LanguageClient_useVirtualText = 1
 autocmd BufWritePre *.go :call LanguageClient#textDocument_formatting_sync()
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
 nnoremap <silent> gt :call LanguageClient#textDocument_typeDefinition()<CR>
 nnoremap <silent> gi :call LanguageClient#textDocument_hover()<CR>
+nnoremap <silent> gr :call LanguageClient#textDocument_references()<CR>
 noremap <leader>rn :call LanguageClient#textDocument_rename()<CR>
-
-set completeopt+=menuone
-set completeopt+=noinsert
-set shortmess+=c
-set belloff+=ctrlg
-inoremap <expr> <CR> (pumvisible() ? "\<c-y>" : "\<CR>")
-let g:mucomplete#enable_auto_at_startup = 0
-let g:mucomplete#minimum_prefix_length = 0
-let g:mucomplete#completion_delay = 50
-let g:mucomplete#reopen_immediately = 0
