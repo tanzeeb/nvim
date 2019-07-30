@@ -3,11 +3,13 @@
 ## Installation
 
 ```sh
-$ curl -o ~/.config/nvim/init.vim https://raw.githubusercontent.com/tanzeeb/nvim/master/init.vim
+$ git clone git@github.com:tanzeeb/nvim.git ~/.config/nvim
 ```
 
 Or
 
 ```sh
-$ git clone git@github.com:tanzeeb/nvim.git ~/.config/nvim
+$ curl -o some-config.vim https://raw.githubusercontent.com/tanzeeb/nvim/master/init.vim
+$ nvim -u some-config.vim
 ```
+
