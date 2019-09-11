@@ -9,15 +9,17 @@ call plug#begin('~/.local/share/nvim/bundle')
 Plug 'chriskempson/base16-vim'
 
 Plug 'tpope/vim-sensible'
-Plug 'terryma/vim-multiple-cursors'
+
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
-Plug 'AndrewRadev/splitjoin.vim'
 Plug 'godlygeek/tabular'
 
+Plug 'terryma/vim-multiple-cursors'
 Plug 'yuttie/comfortable-motion.vim'
 Plug 'easymotion/vim-easymotion'
+Plug 'wellle/targets.vim'
+Plug 'machakann/vim-sandwich'
+Plug 'tpope/vim-surround'
 
 Plug 'milkypostman/vim-togglelist'
 
