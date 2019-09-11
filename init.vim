@@ -178,6 +178,36 @@ let g:LanguageClient_serverCommands = {
       \ 'go': ['gopls']
       \ }
 let g:LanguageClient_useVirtualText = 1
+let g:LanguageClient_diagnosticsDisplay = {
+      \     1: {
+      \         "name": "Error",
+      \         "texthl": "Error",
+      \         "signText": "✖",
+      \         "signTexthl": "DiffDelete",
+      \         "virtualTexthl": "Error",
+      \     },
+      \     2: {
+      \         "name": "Warning",
+      \         "texthl": "Todo",
+      \         "signText": "⚠",
+      \         "signTexthl": "DiffAdd",
+      \         "virtualTexthl": "Todo",
+      \     },
+      \     3: {
+      \         "name": "Information",
+      \         "texthl": "Todo",
+      \         "signText": "ℹ",
+      \         "signTexthl": "DiffAdd",
+      \         "virtualTexthl": "Todo",
+      \     },
+      \     4: {
+      \         "name": "Hint",
+      \         "texthl": "Todo",
+      \         "signText": "➤",
+      \         "signTexthl": "DiffAdd",
+      \         "virtualTexthl": "Todo",
+      \     },
+      \ }
 
 autocmd BufWritePre *.go :call LanguageClient#textDocument_formatting_sync()
 nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
