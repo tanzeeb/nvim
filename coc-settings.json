@@ -1,0 +1,20 @@
+{
+  "languageserver": {
+    "golang": {
+      "command": "gopls",
+      "rootPatterns": ["go.mod"],
+      "filetypes": ["go"]
+    }
+  },
+  "diagnostic.virtualText": true,
+  "diagnostic.virtualTextPrefix": "",
+  "diagnostic.enableMessage": "always",
+  "diagnostic.messageTarget": "echo",
+  "diagnostic.signOffset": 5000,
+  "diagnostic.errorSign": "•",
+  "diagnostic.warningSign": "◦",
+  "diagnostic.infoSign": "‣",
+  "diagnostic.hintSign": "⁃",
+  "suggest.floatEnable": true,
+  "suggest.enablePreview": true
+}

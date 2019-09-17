@@ -39,13 +39,10 @@ Plug 'vim-airline/vim-airline-themes'
 
 Plug 'majutsushi/tagbar'
 
-Plug 'autozimu/LanguageClient-neovim', {
-      \ 'branch': 'next',
-      \ 'do': 'bash install.sh',
-      \ }
-
 Plug 'junegunn/fzf', { 'dir': '~/.local/share/fzf/', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
 
@@ -77,7 +74,7 @@ set smartindent
 set list
 set listchars=tab:\ \ ,extends:›,precedes:‹,nbsp:·,trail:·
 
-set signcolumn=yes
+set signcolumn=auto:3
 set shortmess+=c
 
 set termguicolors
@@ -133,24 +130,6 @@ let g:NERDTreeIndicatorMapCustom = {
       \ "Unknown"   : "?"
       \ }
 
-let g:comfortable_motion_no_default_key_mappings = 1
-let g:comfortable_motion_impulse_multiplier = 0.5
-let g:comfortable_motion_friction = 0.0
-let g:comfortable_motion_air_drag = 4.0
-nnoremap <silent> <C-j> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1)<CR>
-nnoremap <silent> <C-k> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<CR>
-nnoremap <silent> <C-d> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 2)<CR>
-nnoremap <silent> <C-u> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -2)<CR>
-nnoremap <silent> <C-f> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 4)<CR>
-nnoremap <silent> <C-b> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -4)<CR>
-noremap <silent> <ScrollWheelDown> :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * 1)<CR>
-noremap <silent> <ScrollWheelUp>   :call comfortable_motion#flick(g:comfortable_motion_impulse_multiplier * winheight(0) * -1)<CR>
-
-let g:splitjoin_split_mapping = ''
-let g:splitjoin_join_mapping = ''
-nmap sk :SplitjoinSplit<cr>
-nmap sj :SplitjoinJoin<cr>
-
 let g:fzf_colors = {
       \ 'fg':      ['fg', 'Normal'],
       \ 'bg':      ['bg', 'Normal'],
@@ -174,46 +153,30 @@ command! -bang -nargs=+ Rg
       \		fzf#vim#with_preview('right:50%', '?'),
       \   <bang>0)
 
-let g:LanguageClient_serverCommands = {
-      \ 'go': ['gopls']
-      \ }
-let g:LanguageClient_useVirtualText = 1
-let g:LanguageClient_diagnosticsDisplay = {
-      \     1: {
-      \         "name": "Error",
-      \         "texthl": "Error",
-      \         "signText": "✖",
-      \         "signTexthl": "DiffDelete",
-      \         "virtualTexthl": "Error",
-      \     },
-      \     2: {
-      \         "name": "Warning",
-      \         "texthl": "Todo",
-      \         "signText": "⚠",
-      \         "signTexthl": "DiffAdd",
-      \         "virtualTexthl": "Todo",
-      \     },
-      \     3: {
-      \         "name": "Information",
-      \         "texthl": "Todo",
-      \         "signText": "ℹ",
-      \         "signTexthl": "DiffAdd",
-      \         "virtualTexthl": "Todo",
-      \     },
-      \     4: {
-      \         "name": "Hint",
-      \         "texthl": "Todo",
-      \         "signText": "➤",
-      \         "signTexthl": "DiffAdd",
-      \         "virtualTexthl": "Todo",
-      \     },
-      \ }
 
-autocmd BufWritePre *.go :call LanguageClient#textDocument_formatting_sync()
-nnoremap <silent> gd :call LanguageClient#textDocument_definition()<CR>
-nnoremap <silent> K :call LanguageClient#textDocument_hover()<CR>
-nnoremap <silent> gt :call LanguageClient#textDocument_typeDefinition()<CR>
-nnoremap <silent> gr :call LanguageClient#textDocument_references()<CR>
-noremap <leader>rn :call LanguageClient#textDocument_rename()<CR>
-noremap <leader>= :call LanguageClient#textDocument_codeAction()<CR>
+" TODO: DRY
+call g:Base16hi("CocErrorSign", g:base16_gui09, g:base16_gui01, g:base16_cterm09, g:base16_cterm01, "", "")
+call g:Base16hi("CocWarningSign", g:base16_gui0A, g:base16_gui01, g:base16_cterm0A, g:base16_cterm01, "", "")
+call g:Base16hi("CocInfoSign", g:base16_gui0E, g:base16_gui01, g:base16_cterm0E, g:base16_cterm01, "", "")
+call g:Base16hi("CocHintSign", g:base16_gui0F, g:base16_gui01, g:base16_cterm0F, g:base16_cterm01, "", "")
 
+call g:Base16hi("CocErrorFloat", g:base16_gui01, g:base16_gui09, g:base16_cterm01, g:base16_cterm09, "", "")
+call g:Base16hi("CocWarningFloat", g:base16_gui01, g:base16_gui0A, g:base16_cterm01, g:base16_cterm0A, "", "")
+call g:Base16hi("CocInfoFloat", g:base16_gui01, g:base16_gui0E, g:base16_cterm01, g:base16_cterm0E, "", "")
+call g:Base16hi("CocHintFloat", g:base16_gui01, g:base16_gui0F, g:base16_cterm01, g:base16_cterm0F, "", "")
+
+call g:Base16hi("CocErrorVirtualText", g:base16_gui01, g:base16_gui09, g:base16_cterm01, g:base16_cterm09, "", "")
+call g:Base16hi("CocWarningVirtualText", g:base16_gui01, g:base16_gui0A, g:base16_cterm01, g:base16_cterm0A, "", "")
+call g:Base16hi("CocInfoVirtualText", g:base16_gui01, g:base16_gui0E, g:base16_cterm01, g:base16_cterm0E, "", "")
+call g:Base16hi("CocHintVirtualText", g:base16_gui01, g:base16_gui0F, g:base16_cterm01, g:base16_cterm0F, "", "")
+
+" TODO: coc-config
+
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gt <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+nmap <silent> <leader>rn <Plug>(coc-rename)
+nmap <silent> <leader>= <Plug>(coc-codeaction)
+nnoremap <silent> K :call CocAction('doHover')<CR>
+autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
