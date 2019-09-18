@@ -108,14 +108,6 @@ let g:go_highlight_extra_types=1
 let g:go_highlight_chan_whitespace_error=1
 let g:go_highlight_array_whitespace_error=1
 
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter *
-      \ if argc() == 0 && !exists("s:std_in") |
-      \   NERDTree |
-      \ elseif argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") |
-      \	  exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] |
-      \ endif
-
 let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeMouseMode = 3
 let g:NERDTreeIndicatorMapCustom = {
@@ -153,6 +145,13 @@ command! -bang -nargs=+ Rg
       \		fzf#vim#with_preview('right:50%', '?'),
       \   <bang>0)
 
+
+call g:Base16hi("ExtraWhitespace", "", g:base16_gui09, "", g:base16_cterm09, "", "")
+
+" TODO: tweak more
+call g:Base16hi("Pmenu", g:base16_gui06, g:base16_gui01, g:base16_cterm06, g:base16_cterm01, "", "")
+call g:Base16hi("PmenuSel", g:base16_gui07, g:base16_gui0F, g:base16_cterm07, g:base16_cterm0F, "", "")
+call g:Base16hi("CocFloating", g:base16_gui07, g:base16_gui0F, g:base16_cterm07, g:base16_cterm0F, "", "")
 
 " TODO: DRY
 call g:Base16hi("CocErrorSign", g:base16_gui09, g:base16_gui01, g:base16_cterm09, g:base16_cterm01, "", "")
