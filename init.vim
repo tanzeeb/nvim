@@ -44,6 +44,8 @@ Plug 'junegunn/fzf.vim'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+Plug 'honza/vim-snippets'
+
 call plug#end()
 
 autocmd VimEnter *
@@ -81,6 +83,13 @@ set termguicolors
 let base16colorspace=256
 colorscheme base16-tomorrow-night
 let g:airline_theme='base16_vim'
+
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#tab_min_count = 2
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#buffer_min_count = 2
+let g:airline#extensions#tabline#close_symbol = '✖'
+let g:airline_powerline_fonts = 1
 
 noremap <silent> <leader>r :source $MYVIMRC<CR>:do VimEnter *<CR>
 noremap <leader>n :NERDTreeToggle<CR>
@@ -146,12 +155,13 @@ command! -bang -nargs=+ Rg
       \   <bang>0)
 
 
+" TODO: :hi ExtraWhitespace link Error
 call g:Base16hi("ExtraWhitespace", "", g:base16_gui09, "", g:base16_cterm09, "", "")
 
 " TODO: tweak more
-call g:Base16hi("Pmenu", g:base16_gui06, g:base16_gui01, g:base16_cterm06, g:base16_cterm01, "", "")
-call g:Base16hi("PmenuSel", g:base16_gui07, g:base16_gui0F, g:base16_cterm07, g:base16_cterm0F, "", "")
-call g:Base16hi("CocFloating", g:base16_gui07, g:base16_gui0F, g:base16_cterm07, g:base16_cterm0F, "", "")
+"call g:Base16hi("Pmenu", g:base16_gui06, g:base16_gui01, g:base16_cterm06, g:base16_cterm01, "", "")
+"call g:Base16hi("PmenuSel", g:base16_gui07, g:base16_gui0F, g:base16_cterm07, g:base16_cterm0F, "", "")
+"call g:Base16hi("CocFloating", g:base16_gui07, g:base16_gui0F, g:base16_cterm07, g:base16_cterm0F, "", "")
 
 " TODO: DRY
 call g:Base16hi("CocErrorSign", g:base16_gui09, g:base16_gui01, g:base16_cterm09, g:base16_cterm01, "", "")
@@ -170,6 +180,22 @@ call g:Base16hi("CocInfoVirtualText", g:base16_gui01, g:base16_gui0E, g:base16_c
 call g:Base16hi("CocHintVirtualText", g:base16_gui01, g:base16_gui0F, g:base16_cterm01, g:base16_cterm0F, "", "")
 
 " TODO: coc-config
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+let g:coc_snippet_next = '<Tab>'
+let g:coc_snippet_prev = '<S-Tab>'
+
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gt <Plug>(coc-type-definition)
