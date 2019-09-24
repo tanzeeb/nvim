@@ -181,6 +181,34 @@ call g:Base16hi("CocHintVirtualText", g:base16_gui01, g:base16_gui0F, g:base16_c
 
 " TODO: coc-config
 
+let g:coc_global_extensions = [
+  \  'coc-json',
+  \  'coc-snippets',
+  \  'coc-vimlsp',
+  \]
+
+let g:coc_user_config = {
+  \  "languageserver": {
+  \    "golang": {
+  \      "command": "gopls",
+  \      "rootPatterns": ["go.mod"],
+  \      "filetypes": ["go"]
+  \    }
+  \  },
+  \  "diagnostic.virtualText": "false",
+  \  "diagnostic.virtualTextPrefix": "",
+  \  "diagnostic.enableMessage": "always",
+  \  "diagnostic.messageTarget": "echo",
+  \  "diagnostic.signOffset": 5000,
+  \  "diagnostic.errorSign": "•",
+  \  "diagnostic.warningSign": "◦",
+  \  "diagnostic.infoSign": "‣",
+  \  "diagnostic.hintSign": "⁃",
+  \  "suggest.floatEnable": "true",
+  \  "suggest.enablePreview": "true",
+  \  "suggest.autoTrigger": "always"
+  \}
+
 function! s:check_back_space() abort
   let col = col('.') - 1
   return !col || getline('.')[col - 1]  =~# '\s'
