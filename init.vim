@@ -154,38 +154,41 @@ command! -bang -nargs=+ Rg
       \		fzf#vim#with_preview('right:50%', '?'),
       \   <bang>0)
 
+function! s:SetBase16hi(group, fg, bg)
+  let g_bg = "g:base16_gui0" . a:bg
+  let g_fg = "g:base16_gui0" . a:fg
+  let c_bg = "g:base16_cterm0" . a:bg
+  let c_fg = "g:base16_cterm0" . a:fg
 
-" TODO: :hi ExtraWhitespace link Error
-call g:Base16hi("ExtraWhitespace", "", g:base16_gui09, "", g:base16_cterm09, "", "")
+  execute "call g:Base16hi('".a:group."', ".g_fg.", ".g_bg.", ".c_fg.", ".c_bg.", '', '')"
+endfunction
+
+
+hi link ExtraWhitespace Error
 
 " TODO: tweak more
-"call g:Base16hi("Pmenu", g:base16_gui06, g:base16_gui01, g:base16_cterm06, g:base16_cterm01, "", "")
-"call g:Base16hi("PmenuSel", g:base16_gui07, g:base16_gui0F, g:base16_cterm07, g:base16_cterm0F, "", "")
-"call g:Base16hi("CocFloating", g:base16_gui07, g:base16_gui0F, g:base16_cterm07, g:base16_cterm0F, "", "")
+call <sid>SetBase16hi("Pmenu", "7", "1")
+call <sid>SetBase16hi("PmenuSel", "1", "7")
+"call <sid>SetBase16hi("PmenuSbar", "5", "1")
+"call <sid>SetBase16hi("PmenuThumb", "2", "1")
+call <sid>SetBase16hi("CocFloating", "6", "1")
 
-" TODO: DRY
-call g:Base16hi("CocErrorSign", g:base16_gui09, g:base16_gui01, g:base16_cterm09, g:base16_cterm01, "", "")
-call g:Base16hi("CocWarningSign", g:base16_gui0A, g:base16_gui01, g:base16_cterm0A, g:base16_cterm01, "", "")
-call g:Base16hi("CocInfoSign", g:base16_gui0E, g:base16_gui01, g:base16_cterm0E, g:base16_cterm01, "", "")
-call g:Base16hi("CocHintSign", g:base16_gui0F, g:base16_gui01, g:base16_cterm0F, g:base16_cterm01, "", "")
-
-call g:Base16hi("CocErrorFloat", g:base16_gui01, g:base16_gui09, g:base16_cterm01, g:base16_cterm09, "", "")
-call g:Base16hi("CocWarningFloat", g:base16_gui01, g:base16_gui0A, g:base16_cterm01, g:base16_cterm0A, "", "")
-call g:Base16hi("CocInfoFloat", g:base16_gui01, g:base16_gui0E, g:base16_cterm01, g:base16_cterm0E, "", "")
-call g:Base16hi("CocHintFloat", g:base16_gui01, g:base16_gui0F, g:base16_cterm01, g:base16_cterm0F, "", "")
-
-call g:Base16hi("CocErrorVirtualText", g:base16_gui01, g:base16_gui09, g:base16_cterm01, g:base16_cterm09, "", "")
-call g:Base16hi("CocWarningVirtualText", g:base16_gui01, g:base16_gui0A, g:base16_cterm01, g:base16_cterm0A, "", "")
-call g:Base16hi("CocInfoVirtualText", g:base16_gui01, g:base16_gui0E, g:base16_cterm01, g:base16_cterm0E, "", "")
-call g:Base16hi("CocHintVirtualText", g:base16_gui01, g:base16_gui0F, g:base16_cterm01, g:base16_cterm0F, "", "")
-
-" TODO: coc-config
+for level in [
+  \   [ "Error", "8", "7" ],
+  \   [ "Warning", "A", "7" ],
+  \   [ "Info", "D", "7"],
+  \   [ "Hint", "6", "7"],
+  \ ]
+  call <sid>SetBase16hi("Coc".level[0]."Sign", level[1], "1")
+  call <sid>SetBase16hi("Coc".level[0]."Float", level[2], level[1])
+  call <sid>SetBase16hi("Coc".level[0]."VirtualText", level[2], level[1])
+endfor
 
 let g:coc_global_extensions = [
   \  'coc-json',
   \  'coc-snippets',
   \  'coc-vimlsp',
-  \]
+  \ ]
 
 let g:coc_user_config = {
   \  "languageserver": {
