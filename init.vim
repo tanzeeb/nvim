@@ -20,6 +20,7 @@ Plug 'easymotion/vim-easymotion'
 Plug 'wellle/targets.vim'
 Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-surround'
+Plug 'jiangmiao/auto-pairs'
 
 Plug 'milkypostman/vim-togglelist'
 
@@ -37,7 +38,7 @@ Plug 'tpope/vim-vinegar'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
-Plug 'majutsushi/tagbar'
+Plug 'liuchengxu/vista.vim'
 
 Plug 'junegunn/fzf', { 'dir': '~/.local/share/fzf/', 'do': './install --bin' }
 Plug 'junegunn/fzf.vim'
@@ -66,6 +67,8 @@ set number
 set nowrap
 set termguicolors
 set backspace=indent,eol,start
+set cursorline
+set wildmenu
 
 set shiftwidth=2
 set tabstop=2
@@ -94,12 +97,18 @@ let g:airline_powerline_fonts = 1
 noremap <silent> <leader>r :source $MYVIMRC<CR>:do VimEnter *<CR>
 noremap <leader>n :NERDTreeToggle<CR>
 noremap <leader>nn :NERDTreeFind<CR>
-noremap <leader>t :TagbarToggle<CR>
+noremap <leader>v :Vista!!<CR>
 noremap <leader>g :GitGutterToggle<CR>
 noremap <leader><space> :Files<CR>
 noremap <leader>f :Rg <C-R><C-W><CR>
 noremap <leader>F :Rg <C-R><C-A><CR>
 vnoremap <leader>f y:Rg <C-R>"<CR>
+
+let g:vista_echo_cursor_strategy = "floating_win"
+let g:vista_icon_indent = ["","  "]
+let g:vista_default_executive = "coc"
+
+let g:AutoPairsFlyMode = 1
 
 let g:go_highlight_variable_assignments=1
 let g:go_highlight_variable_declarations=1
@@ -167,11 +176,11 @@ endfunction
 hi link ExtraWhitespace Error
 
 " TODO: tweak more
-call <sid>SetBase16hi("Pmenu", "7", "1")
-call <sid>SetBase16hi("PmenuSel", "1", "7")
+"call <sid>SetBase16hi("Pmenu", "7", "1")
+"call <sid>SetBase16hi("PmenuSel", "1", "7")
 "call <sid>SetBase16hi("PmenuSbar", "5", "1")
 "call <sid>SetBase16hi("PmenuThumb", "2", "1")
-call <sid>SetBase16hi("CocFloating", "6", "1")
+"call <sid>SetBase16hi("CocFloating", "6", "1")
 
 for level in [
   \   [ "Error", "8", "7" ],
