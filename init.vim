@@ -1,8 +1,15 @@
+" Tanzeeb's NeoVim Configuration
+" github.com/tanzeeb/nvim
+
+" Plugins {{{
+
+" Auto-Install Plugin Manager {{{
 if empty(glob('~/.config/nvim/autoload/plug.vim'))
   silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
         \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC | q
 endif
+" }}}
 
 call plug#begin('~/.local/share/nvim/bundle')
 
@@ -49,11 +56,16 @@ Plug 'honza/vim-snippets'
 
 call plug#end()
 
+" Auto-install Plugins {{{
 autocmd VimEnter *
       \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
       \|   PlugInstall --sync | q
       \| endif
+" }}}
 
+" }}}
+
+" General {{{
 set shell=/bin/sh
 
 set mouse=a
@@ -82,18 +94,10 @@ set listchars=tab:\ \ ,extends:›,precedes:‹,nbsp:·,trail:·
 set signcolumn=auto:3
 set shortmess+=c
 
-set termguicolors
-let base16colorspace=256
-colorscheme base16-tomorrow-night
-let g:airline_theme='base16_vim'
+set foldmethod=syntax
+" }}}
 
-let g:airline#extensions#tabline#enabled = 1
-let g:airline#extensions#tabline#tab_min_count = 2
-let g:airline#extensions#tabline#show_buffers = 0
-let g:airline#extensions#tabline#buffer_min_count = 2
-let g:airline#extensions#tabline#close_symbol = '✖'
-let g:airline_powerline_fonts = 1
-
+" Keymaps {{{
 noremap <silent> <leader>r :source $MYVIMRC<CR>:do VimEnter *<CR>
 noremap <leader>n :NERDTreeToggle<CR>
 noremap <leader>nn :NERDTreeFind<CR>
@@ -103,13 +107,65 @@ noremap <leader><space> :Files<CR>
 noremap <leader>f :Rg <C-R><C-W><CR>
 noremap <leader>F :Rg <C-R><C-A><CR>
 vnoremap <leader>f y:Rg <C-R>"<CR>
+" }}}
 
+" Colours {{{
+set termguicolors
+let base16colorspace=256
+colorscheme base16-tomorrow-night
+
+function! s:SetBase16hi(group, fg, bg)
+  let g_bg = "g:base16_gui0" . a:bg
+  let g_fg = "g:base16_gui0" . a:fg
+  let c_bg = "g:base16_cterm0" . a:bg
+  let c_fg = "g:base16_cterm0" . a:fg
+
+  execute "call g:Base16hi('".a:group."', ".g_fg.", ".g_bg.", ".c_fg.", ".c_bg.", '', '')"
+endfunction
+
+hi link ExtraWhitespace Error
+
+" TODO: tweak more
+"call <sid>SetBase16hi("Pmenu", "7", "1")
+"call <sid>SetBase16hi("PmenuSel", "1", "7")
+"call <sid>SetBase16hi("PmenuSbar", "5", "1")
+"call <sid>SetBase16hi("PmenuThumb", "2", "1")
+"call <sid>SetBase16hi("CocFloating", "6", "1")
+
+for level in [
+  \   [ "Error", "8", "7" ],
+  \   [ "Warning", "A", "7" ],
+  \   [ "Info", "D", "7"],
+  \   [ "Hint", "6", "7"],
+  \ ]
+  call <sid>SetBase16hi("Coc".level[0]."Sign", level[1], "1")
+  call <sid>SetBase16hi("Coc".level[0]."Float", level[2], level[1])
+  call <sid>SetBase16hi("Coc".level[0]."VirtualText", level[2], level[1])
+endfor
+
+" }}}
+
+" Airline {{{
+let g:airline_theme='base16_vim'
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#tab_min_count = 2
+let g:airline#extensions#tabline#show_buffers = 0
+let g:airline#extensions#tabline#buffer_min_count = 2
+let g:airline#extensions#tabline#close_symbol = '✖'
+let g:airline_powerline_fonts = 1
+" }}}
+
+" Vista {{{
 let g:vista_echo_cursor_strategy = "floating_win"
 let g:vista_icon_indent = ["","  "]
 let g:vista_default_executive = "coc"
+" }}}
 
+" Misc. {{{
 let g:AutoPairsFlyMode = 1
+" }}}
 
+" Go {{{
 let g:go_highlight_variable_assignments=1
 let g:go_highlight_variable_declarations=1
 let g:go_highlight_generate_tags=1
@@ -125,7 +181,9 @@ let g:go_highlight_space_tab_error=1
 let g:go_highlight_extra_types=1
 let g:go_highlight_chan_whitespace_error=1
 let g:go_highlight_array_whitespace_error=1
+" }}}
 
+" NERDTree {{{
 let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeMouseMode = 3
 let g:NERDTreeIndicatorMapCustom = {
@@ -139,7 +197,9 @@ let g:NERDTreeIndicatorMapCustom = {
       \ "Clean"     : "✔︎",
       \ "Unknown"   : "?"
       \ }
+" }}}
 
+" FZF {{{
 let g:fzf_colors = {
       \ 'fg':      ['fg', 'Normal'],
       \ 'bg':      ['bg', 'Normal'],
@@ -162,37 +222,9 @@ command! -bang -nargs=+ Rg
       \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
       \		fzf#vim#with_preview('right:50%', '?'),
       \   <bang>0)
+" }}}
 
-function! s:SetBase16hi(group, fg, bg)
-  let g_bg = "g:base16_gui0" . a:bg
-  let g_fg = "g:base16_gui0" . a:fg
-  let c_bg = "g:base16_cterm0" . a:bg
-  let c_fg = "g:base16_cterm0" . a:fg
-
-  execute "call g:Base16hi('".a:group."', ".g_fg.", ".g_bg.", ".c_fg.", ".c_bg.", '', '')"
-endfunction
-
-
-hi link ExtraWhitespace Error
-
-" TODO: tweak more
-"call <sid>SetBase16hi("Pmenu", "7", "1")
-"call <sid>SetBase16hi("PmenuSel", "1", "7")
-"call <sid>SetBase16hi("PmenuSbar", "5", "1")
-"call <sid>SetBase16hi("PmenuThumb", "2", "1")
-"call <sid>SetBase16hi("CocFloating", "6", "1")
-
-for level in [
-  \   [ "Error", "8", "7" ],
-  \   [ "Warning", "A", "7" ],
-  \   [ "Info", "D", "7"],
-  \   [ "Hint", "6", "7"],
-  \ ]
-  call <sid>SetBase16hi("Coc".level[0]."Sign", level[1], "1")
-  call <sid>SetBase16hi("Coc".level[0]."Float", level[2], level[1])
-  call <sid>SetBase16hi("Coc".level[0]."VirtualText", level[2], level[1])
-endfor
-
+" CoC {{{
 let g:coc_global_extensions = [
   \  'coc-json',
   \  'coc-snippets',
@@ -245,3 +277,6 @@ nmap <silent> <leader>rn <Plug>(coc-rename)
 nmap <silent> <leader>= <Plug>(coc-codeaction)
 nnoremap <silent> K :call CocAction('doHover')<CR>
 autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+" }}}
+
+" vim:foldmethod=marker:foldlevel=0
