@@ -95,6 +95,7 @@ set signcolumn=auto:3
 set shortmess+=c
 
 set foldmethod=syntax
+set foldlevelstart=99
 " }}}
 
 " Keymaps {{{
