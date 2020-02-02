@@ -296,13 +296,15 @@ let g:coc_snippet_prev = '<S-Tab>'
 
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
 
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gt <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gd <Plug>(coc-declaration)
+nmap <silent> <c-]> <Plug>(coc-definition)
+nnoremap <silent> K :call CocAction('doHover')<CR>
+nmap <silent> gD <Plug>(coc-implementation)
+nmap <silent> lgD <Plug>(coc-type-definition)
 nmap <silent> gr <Plug>(coc-references)
+nnoremap <silent> <c-k> :call CocActionAsync('showSignatureHelp')<CR>
 nmap <silent> <leader>rn <Plug>(coc-rename)
 nmap <silent> <leader>= <Plug>(coc-codeaction)
-nnoremap <silent> K :call CocAction('doHover')<CR>
 autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
 " }}}
 
