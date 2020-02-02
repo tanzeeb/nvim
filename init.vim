@@ -163,7 +163,6 @@ let g:vista_default_executive = "coc"
 " }}}
 
 " Misc. {{{
-let g:AutoPairsFlyMode = 1
 " }}}
 
 " Go {{{
