@@ -254,6 +254,7 @@ let g:coc_global_extensions = [
   \  'coc-json',
   \  'coc-snippets',
   \  'coc-vimlsp',
+  \  'coc-rls',
   \ ]
 
 let g:coc_user_config = {
@@ -275,7 +276,8 @@ let g:coc_user_config = {
   \  "diagnostic.hintSign": "⁃",
   \  "suggest.floatEnable": "true",
   \  "suggest.enablePreview": "true",
-  \  "suggest.autoTrigger": "always"
+  \  "suggest.autoTrigger": "always",
+  \  "coc.preferences.formatOnSaveFiletypes": ["rust"],
   \}
 
 function! s:check_back_space() abort
