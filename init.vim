@@ -163,6 +163,7 @@ let g:vista_default_executive = "coc"
 " }}}
 
 " Misc. {{{
+let g:AutoPairsFlyMode = 0
 " }}}
 
 " Go {{{
@@ -277,7 +278,7 @@ let g:coc_user_config = {
   \  "suggest.floatEnable": "true",
   \  "suggest.enablePreview": "true",
   \  "suggest.autoTrigger": "always",
-  \  "coc.preferences.formatOnSaveFiletypes": ["rust"],
+  \  "coc.preferences.formatOnSaveFiletypes": ["rust"]
   \}
 
 function! s:check_back_space() abort
