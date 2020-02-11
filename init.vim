@@ -255,7 +255,7 @@ let g:coc_global_extensions = [
   \  'coc-json',
   \  'coc-snippets',
   \  'coc-vimlsp',
-  \  'coc-rls',
+  \  'coc-rust-analyzer',
   \ ]
 
 let g:coc_user_config = {
