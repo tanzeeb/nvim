@@ -231,11 +231,11 @@ au FileType fzf set nonu nornu
 
 " CoC {{{
 let g:coc_global_extensions = [
-  \  'coc-json',
-  \  'coc-snippets',
-  \  'coc-vimlsp',
-  \  'coc-rust-analyzer',
-  \ ]
+      \  'coc-json',
+      \  'coc-snippets',
+      \  'coc-vimlsp',
+      \  'coc-rust-analyzer',
+      \ ]
 
 let g:coc_user_config = {
       \  "languageserver": {
