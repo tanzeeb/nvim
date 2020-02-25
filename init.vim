@@ -27,7 +27,6 @@ Plug 'easymotion/vim-easymotion'
 Plug 'wellle/targets.vim'
 Plug 'machakann/vim-sandwich'
 Plug 'tpope/vim-surround'
-Plug 'jiangmiao/auto-pairs'
 
 Plug 'milkypostman/vim-togglelist'
 
@@ -143,7 +142,6 @@ for level in [
   call <sid>SetBase16hi("Coc".level[0]."Float", level[2], level[1])
   call <sid>SetBase16hi("Coc".level[0]."VirtualText", level[2], level[1])
 endfor
-
 " }}}
 
 " Airline {{{
@@ -163,7 +161,7 @@ let g:vista_default_executive = "coc"
 " }}}
 
 " Misc. {{{
-let g:AutoPairsFlyMode = 0
+
 " }}}
 
 " Go {{{
@@ -225,26 +223,7 @@ command! -bang -nargs=+ Rg
       \   <bang>0)
 
 let $FZF_DEFAULT_OPTS='--layout=reverse'
-let g:fzf_layout = { 'window': 'call FloatingFZF()' }
-
-function! FloatingFZF()
-  let buf = nvim_create_buf(v:false, v:true)
-  call setbufvar(buf, '&signcolumn', 'no')
-
-  let height = &lines - 3
-  let width = float2nr(&columns - (&columns * 2 / 10))
-  let col = float2nr((&columns - width) / 2)
-
-  let opts = {
-        \ 'relative': 'editor',
-        \ 'row': 1,
-        \ 'col': col,
-        \ 'width': width,
-        \ 'height': height
-        \ }
-
-  call nvim_open_win(buf, v:true, opts)
-endfunction
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.6 } }
 
 au FileType fzf set nonu nornu
 
@@ -259,27 +238,31 @@ let g:coc_global_extensions = [
   \ ]
 
 let g:coc_user_config = {
-  \  "languageserver": {
-  \    "golang": {
-  \      "command": "gopls",
-  \      "rootPatterns": ["go.mod"],
-  \      "filetypes": ["go"]
-  \    }
-  \  },
-  \  "diagnostic.virtualText": "false",
-  \  "diagnostic.virtualTextPrefix": "",
-  \  "diagnostic.enableMessage": "always",
-  \  "diagnostic.messageTarget": "echo",
-  \  "diagnostic.signOffset": 5000,
-  \  "diagnostic.errorSign": "•",
-  \  "diagnostic.warningSign": "◦",
-  \  "diagnostic.infoSign": "‣",
-  \  "diagnostic.hintSign": "⁃",
-  \  "suggest.floatEnable": "true",
-  \  "suggest.enablePreview": "true",
-  \  "suggest.autoTrigger": "always",
-  \  "coc.preferences.formatOnSaveFiletypes": ["rust"]
-  \}
+      \  "languageserver": {
+      \    "golang": {
+      \      "command": "gopls",
+      \      "rootPatterns": ["go.mod"],
+      \      "filetypes": ["go"],
+      \      "initializationOptions": {
+      \        "usePlaceholders": "true",
+      \        "buildFlags": ["-tags=e2e"]
+      \      }
+      \    }
+      \  },
+      \  "diagnostic.virtualText": "false",
+      \  "diagnostic.virtualTextPrefix": "",
+      \  "diagnostic.enableMessage": "always",
+      \  "diagnostic.messageTarget": "echo",
+      \  "diagnostic.signOffset": 5000,
+      \  "diagnostic.errorSign": "•",
+      \  "diagnostic.warningSign": "◦",
+      \  "diagnostic.infoSign": "‣",
+      \  "diagnostic.hintSign": "⁃",
+      \  "suggest.floatEnable": "true",
+      \  "suggest.enablePreview": "true",
+      \  "suggest.autoTrigger": "never",
+      \  "coc.preferences.formatOnSaveFiletypes": ["rust"]
+      \}
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -298,15 +281,15 @@ let g:coc_snippet_prev = '<S-Tab>'
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
 
 nmap <silent> gd <Plug>(coc-declaration)
-nmap <silent> <c-]> <Plug>(coc-definition)
+nmap <silent> <c-]> <Plug>(coc-type-definition)
 nnoremap <silent> K :call CocAction('doHover')<CR>
-nmap <silent> gD <Plug>(coc-implementation)
-nmap <silent> lgD <Plug>(coc-type-definition)
+nmap <silent> gD <Plug>(coc-definition)
 nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> <c-k> :call CocActionAsync('showSignatureHelp')<CR>
 nmap <silent> <leader>rn <Plug>(coc-rename)
 nmap <silent> <leader>= <Plug>(coc-codeaction)
+
 autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
 " }}}
-
+"
 " vim:foldmethod=marker:foldlevel=0
