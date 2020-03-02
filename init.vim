@@ -261,7 +261,7 @@ let g:coc_user_config = {
       \  "suggest.floatEnable": "true",
       \  "suggest.enablePreview": "true",
       \  "suggest.autoTrigger": "never",
-      \  "coc.preferences.formatOnSaveFiletypes": ["rust"]
+      \  "coc.preferences.formatOnSaveFiletypes": ["rust", "go"]
       \}
 
 function! s:check_back_space() abort
@@ -280,10 +280,10 @@ let g:coc_snippet_prev = '<S-Tab>'
 
 inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<CR>"
 
-nmap <silent> gd <Plug>(coc-declaration)
+nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> <c-]> <Plug>(coc-type-definition)
 nnoremap <silent> K :call CocAction('doHover')<CR>
-nmap <silent> gD <Plug>(coc-definition)
+nmap <silent> gD <Plug>(coc-declaration)
 nmap <silent> gr <Plug>(coc-references)
 nnoremap <silent> <c-k> :call CocActionAsync('showSignatureHelp')<CR>
 nmap <silent> <leader>rn <Plug>(coc-rename)
