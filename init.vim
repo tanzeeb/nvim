@@ -79,6 +79,7 @@ set nowrap
 set termguicolors
 set backspace=indent,eol,start
 set cursorline
+set cursorcolumn
 set wildmenu
 
 set shiftwidth=2
