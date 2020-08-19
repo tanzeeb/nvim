@@ -186,7 +186,7 @@ let g:go_highlight_array_whitespace_error=1
 " NERDTree {{{
 let NERDTreeAutoDeleteBuffer = 1
 let NERDTreeMouseMode = 3
-let g:NERDTreeIndicatorMapCustom = {
+let g:NERDTreeGitStatusIndicatorMapCustom = {
       \ "Modified"  : "~",
       \ "Staged"    : "✚",
       \ "Untracked" : "✭",
