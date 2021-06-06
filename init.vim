@@ -65,8 +65,6 @@ autocmd VimEnter *
 " }}}
 
 " General {{{
-set shell=/bin/sh
-
 set mouse=a
 set hidden
 set nobackup
@@ -250,15 +248,16 @@ let g:coc_user_config = {
       \      }
       \    }
       \  },
+      \  "codeLens.enable": "true",
       \  "diagnostic.virtualText": "false",
       \  "diagnostic.virtualTextPrefix": "",
       \  "diagnostic.enableMessage": "always",
       \  "diagnostic.messageTarget": "echo",
-      \  "diagnostic.signOffset": 5000,
       \  "diagnostic.errorSign": "•",
       \  "diagnostic.warningSign": "◦",
       \  "diagnostic.infoSign": "‣",
       \  "diagnostic.hintSign": "⁃",
+      \  "rust-analyzer.checkOnSave.allTargets": "false",
       \  "suggest.floatEnable": "true",
       \  "suggest.enablePreview": "true",
       \  "suggest.autoTrigger": "never",
