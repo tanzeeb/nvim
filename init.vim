@@ -15,24 +15,17 @@ call plug#begin('~/.local/share/nvim/bundle')
 
 Plug 'chriskempson/base16-vim'
 
-Plug 'tpope/vim-sensible'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'tpope/vim-repeat'
 
 Plug 'godlygeek/tabular'
 Plug 'scrooloose/nerdcommenter'
 
-Plug 'sheerun/vim-polyglot'
-
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'nvim-treesitter/playground'
 
 Plug 'neovim/nvim-lspconfig'
-Plug 'nvim-lua/completion-nvim'
-
-Plug 'nvim-lua/popup.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
+Plug 'kabouzeid/nvim-lspinstall'
 
 call plug#end()
 
@@ -85,7 +78,7 @@ noremap <silent> <leader>r :source $MYVIMRC<CR>:do VimEnter *<CR>
 
 " Colours {{{
 set termguicolors
-"let base16colorspace=256
+let base16colorspace=256
 colorscheme base16-tomorrow-night
 
 " SetBase16hi(group, fg, bg)
@@ -134,7 +127,21 @@ EOF
 " LSP {{{
 
 lua << EOF
-local nvim_lsp = require('lspconfig')
+local lspconfig = require('lspconfig')
+local lspinstall = require('lspinstall')
+
+local languages = {
+  "bash",
+  "go",
+  "lua",
+  "rust",
+  "vim",
+}
+for _,lang in pairs(languages) do
+  if not lspinstall.is_server_installed(lang) then
+    lspinstall.install_server(lang)
+  end
+end
 
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
@@ -161,44 +168,76 @@ local on_attach = function(client, bufnr)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
   buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
   buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+
+  if client.resolved_capabilities.document_formatting then
+    buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  elseif client.resolved_capabilities.document_range_formatting then
+    buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+  end
+
+  if client.resolved_capabilities.document_highlight then
+    vim.api.nvim_exec([[
+    augroup lsp_document_highlight
+    autocmd! * <buffer>
+    autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+    autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+    augroup END
+    ]], false)
+  end
 end
 
-local servers = {
-  "bashls",        -- npm i -g bash-language-server
-  "gopls",         -- GO111MODULE=on go get golang.org/x/tools/gopls@latest
-  "rust_analyzer", -- rustup +nightly component add rust-analyzer-preview
-  "vimls",         -- npm install -g vim-language-server
+local lua_settings = {
+  Lua = {
+    runtime = {
+      version = 'LuaJIT',
+      path = vim.split(package.path, ';'),
+    },
+    diagnostics = {
+      globals = {'vim'},
+    },
+    workspace = {
+      library = {
+        [vim.fn.expand('$VIMRUNTIME/lua')] = true,
+        [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
+      },
+    },
+  }
 }
-for _, lsp in ipairs(servers) do
-  nvim_lsp[lsp].setup { on_attach = on_attach }
+
+local function make_config()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  return {
+    capabilities = capabilities,
+    on_attach = on_attach,
+  }
+end
+
+local function setup_servers()
+  lspinstall.setup()
+
+  local servers = lspinstall.installed_servers()
+
+  for _, server in pairs(servers) do
+    local config = make_config()
+
+    if server == "lua" then
+      config.settings = lua_settings
+    end
+
+    lspconfig[server].setup(config)
+  end
+end
+
+setup_servers()
+
+lspinstall.post_install_hook = function ()
+  setup_servers()
+  vim.cmd("bufdo e")
 end
 
 EOF
 
-" }}}
-
-" Completion {{{
-autocmd BufEnter * lua require'completion'.on_attach()
-
-inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
-inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
-imap <tab> <Plug>(completion_smart_tab)
-imap <s-tab> <Plug>(completion_smart_s_tab)
-" }}}
-
-" Telescope {{{
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-
-lua << EOF
-require('telescope').setup{
-  defaults = {
-    layout_strategy = 'flex',
-  },
-}
-EOF
 " }}}
 
 " vim:foldmethod=marker:foldlevel=0
