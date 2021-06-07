@@ -1,108 +1,100 @@
-" Tanzeeb's NeoVim Configuration
-" github.com/tanzeeb/nvim
+-- Tanzeeb's NeoVim Configuration
+-- github.com/tanzeeb/nvim
 
-" Plugins {{{
+-- Plugins {{{
 
-" Auto-Install Plugin Manager {{{
-if empty(glob('~/.config/nvim/autoload/plug.vim'))
-  silent !curl -fLo ~/.config/nvim/autoload/plug.vim --create-dirs
-        \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC | q
-endif
-" }}}
+-- Auto-Install Plugin Manager {{{
+local install_path = vim.fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
 
-call plug#begin('~/.local/share/nvim/bundle')
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+  vim.api.nvim_command('!git clone https://github.com/wbthomason/packer.nvim '..install_path)
+end
 
-Plug 'chriskempson/base16-vim'
+vim.cmd [[packadd packer.nvim]]
+vim.cmd 'autocmd BufWritePost init.lua PackerCompile'
 
-Plug 'bronson/vim-trailing-whitespace'
-Plug 'tpope/vim-repeat'
+-- }}}
 
-Plug 'godlygeek/tabular'
-Plug 'scrooloose/nerdcommenter'
+require('packer').startup({function(use)
 
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'nvim-treesitter/playground'
+use { 'chriskempson/base16-vim' }
 
-Plug 'neovim/nvim-lspconfig'
-Plug 'kabouzeid/nvim-lspinstall'
+use { 'bronson/vim-trailing-whitespace' }
+use { 'tpope/vim-repeat' }
+use { 'tpope/vim-surround' }
 
-call plug#end()
+use { 'godlygeek/tabular' }
+use { 'scrooloose/nerdcommenter' }
 
-" Auto-install Plugins {{{
-autocmd VimEnter *
-      \  if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
-      \|   PlugInstall --sync | q
-      \| endif
-" }}}
+use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+use { 'nvim-treesitter/playground' }
 
-" }}}
+use { 'neovim/nvim-lspconfig' }
+use { 'kabouzeid/nvim-lspinstall' }
 
-" General {{{
-set mouse=a
-set hidden
-set nobackup
-set noswapfile
-set nowritebackup
-set updatetime=300
+end,
+config = {
+  display = {
+    open_fn = function()
+      return require('packer.util').float({ border = 'single' })
+    end
+  }
+}})
+-- }}}
 
-set number
-set nowrap
-set termguicolors
-set backspace=indent,eol,start
-set cursorline
-set cursorcolumn
-set wildmenu
+-- General {{{
+vim.o.mouse = 'a'
+vim.o.hidden = true
+vim.o.backup = false
+vim.o.swapfile = false
+vim.o.writebackup = false
+vim.o.updatetime = 300
 
-set shiftwidth=2
-set tabstop=2
-set expandtab
-set autoindent
-set smartindent
+vim.o.number = true
+vim.o.wrap = false
+vim.o.termguicolors = true
+vim.o.backspace = 'indent,eol,start'
+vim.o.cursorline = true
+vim.o.cursorcolumn = true
+vim.o.wildmenu = true
 
-set list
-set listchars=tab:\ \ ,extends:›,precedes:‹,nbsp:·,trail:·
+vim.o.shiftwidth = 2
+vim.o.tabstop = 2
+vim.o.expandtab = true
+vim.o.autoindent = true
+vim.o.smartindent = true
 
-set shortmess+=c
+vim.o.list = true
+vim.opt.listchars = { tab='  ', extends='›', precedes='‹', nbsp='·', trail='·' }
 
-set completeopt=menuone,noinsert,noselect
+vim.o.shortmess = vim.o.shortmess .. 'c'
 
-set foldmethod=expr
-set foldexpr=nvim_treesitter#foldexpr()
-set foldlevelstart=99
-" }}}
+vim.o.completeopt = 'menuone,noinsert,noselect'
 
-" Keymaps {{{
-noremap <silent> <leader>r :source $MYVIMRC<CR>:do VimEnter *<CR>
-" }}}
+vim.o.foldmethod = 'expr'
+vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.o.foldlevelstart = 99
+-- }}}
 
-" Colours {{{
-set termguicolors
-let base16colorspace=256
-colorscheme base16-tomorrow-night
+-- Keymaps {{{
+local function keymap(mode, lhs, rhs) vim.api.nvim_set_keymap(mode,lhs,rhs,{noremap=true, silent=true}) end
 
-" SetBase16hi(group, fg, bg)
-" sets a base16 colorscheme based on fg/bg for the specified highlight group
-" eg.
-"   call <sid>SetBase16hi("Pmenu", "7", "1")
-function! s:SetBase16hi(group, fg, bg)
-  let g_bg = "g:base16_gui0" . a:bg
-  let g_fg = "g:base16_gui0" . a:fg
-  let c_bg = "g:base16_cterm0" . a:bg
-  let c_fg = "g:base16_cterm0" . a:fg
+keymap('n', '<leader>r', '<cmd>source $MYVIMRC<CR>:do VimEnter *<CR>')
+-- }}}
 
-  execute "call g:Base16hi('".a:group."', ".g_fg.", ".g_bg.", ".c_fg.", ".c_bg.", '', '')"
-endfunction
+-- Colours {{{
+vim.o.termguicolors = true
+vim.cmd 'let base16colorspace=256'
+vim.cmd 'colorscheme base16-tomorrow-night'
 
-hi link ExtraWhitespace Error
-" }}}
+vim.cmd 'hi link ExtraWhitespace Error'
+-- }}}
 
-" Misc. {{{
+-- Misc. {{{
 
-" }}}
+-- }}}
 
-" Treesitter {{{
-lua <<EOF
+-- Treesitter {{{
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "maintained",
   highlight = {
@@ -121,12 +113,10 @@ require'nvim-treesitter.configs'.setup {
     enable = true
   }
 }
-EOF
-" }}}
+-- }}}
 
-" LSP {{{
+-- LSP {{{
 
-lua << EOF
 local lspconfig = require('lspconfig')
 local lspinstall = require('lspinstall')
 
@@ -236,8 +226,6 @@ lspinstall.post_install_hook = function ()
   vim.cmd("bufdo e")
 end
 
-EOF
+-- }}}
 
-" }}}
-
-" vim:foldmethod=marker:foldlevel=0
+-- vim:foldmethod=marker:foldlevel=0
