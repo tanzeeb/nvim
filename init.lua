@@ -4,42 +4,43 @@
 -- Plugins {{{
 
 -- Auto-Install Plugin Manager {{{
-local install_path = vim.fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
+local execute = vim.api.nvim_command
+local fn = vim.fn
 
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.api.nvim_command('!git clone https://github.com/wbthomason/packer.nvim '..install_path)
+local install_path = fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
+
+if fn.empty(fn.glob(install_path)) > 0 then
+  fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
+  execute 'packadd packer.nvim'
 end
-
-vim.cmd [[packadd packer.nvim]]
-vim.cmd 'autocmd BufWritePost init.lua PackerCompile'
 
 -- }}}
 
-require('packer').startup({function(use)
+require('packer').startup({
+  function(use)
+    use { 'chriskempson/base16-vim' }
 
-use { 'chriskempson/base16-vim' }
+    use { 'bronson/vim-trailing-whitespace' }
+    use { 'tpope/vim-repeat' }
+    use { 'tpope/vim-surround' }
 
-use { 'bronson/vim-trailing-whitespace' }
-use { 'tpope/vim-repeat' }
-use { 'tpope/vim-surround' }
+    use { 'godlygeek/tabular' }
+    use { 'scrooloose/nerdcommenter' }
 
-use { 'godlygeek/tabular' }
-use { 'scrooloose/nerdcommenter' }
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+    use { 'nvim-treesitter/playground' }
 
-use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-use { 'nvim-treesitter/playground' }
-
-use { 'neovim/nvim-lspconfig' }
-use { 'kabouzeid/nvim-lspinstall' }
-
-end,
-config = {
-  display = {
-    open_fn = function()
-      return require('packer.util').float({ border = 'single' })
-    end
-  }
-}})
+    use { 'neovim/nvim-lspconfig' }
+    use { 'kabouzeid/nvim-lspinstall' }
+  end,
+  config = {
+    display = {
+      open_fn = function()
+        return require('packer.util').float({ border = 'single' })
+      end
+    }
+  },
+})
 -- }}}
 
 -- General {{{
