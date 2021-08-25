@@ -7,17 +7,18 @@
 local execute = vim.api.nvim_command
 local fn = vim.fn
 
-local install_path = fn.stdpath('data')..'/site/pack/packer/opt/packer.nvim'
+local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
 
 if fn.empty(fn.glob(install_path)) > 0 then
   fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
   execute 'packadd packer.nvim'
 end
-
 -- }}}
 
 require('packer').startup({
   function(use)
+    use {'wbthomason/packer.nvim'}
+
     use { 'chriskempson/base16-vim' }
 
     use { 'bronson/vim-trailing-whitespace' }
@@ -35,12 +36,11 @@ require('packer').startup({
   end,
   config = {
     display = {
-      open_fn = function()
-        return require('packer.util').float({ border = 'single' })
-      end
-    }
+      non_interactive = true,
+    },
   },
 })
+
 -- }}}
 
 -- General {{{
@@ -118,7 +118,6 @@ require'nvim-treesitter.configs'.setup {
 
 -- LSP {{{
 
-local lspconfig = require('lspconfig')
 local lspinstall = require('lspinstall')
 
 local languages = {
@@ -208,6 +207,7 @@ local function setup_servers()
   lspinstall.setup()
 
   local servers = lspinstall.installed_servers()
+  local lspconfig = require('lspconfig')
 
   for _, server in pairs(servers) do
     local config = make_config()
@@ -226,6 +226,24 @@ lspinstall.post_install_hook = function ()
   setup_servers()
   vim.cmd("bufdo e")
 end
+
+function OrgImports(wait_ms)
+  local params = vim.lsp.util.make_range_params()
+  params.context = {only = {"source.organizeImports"}}
+  local result = vim.lsp.buf_request_sync(0, "textDocument/codeAction", params, wait_ms)
+  for _, res in pairs(result or {}) do
+    for _, r in pairs(res.result or {}) do
+      if r.edit then
+        vim.lsp.util.apply_workspace_edit(r.edit)
+      else
+        vim.lsp.buf.execute_command(r.command)
+      end
+    end
+  end
+  vim.lsp.buf.formatting()
+end
+
+vim.api.nvim_command("au BufWritePre *.go lua OrgImports(1000)")
 
 -- }}}
 
