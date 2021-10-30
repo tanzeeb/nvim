@@ -234,6 +234,7 @@ let g:coc_global_extensions = [
       \  'coc-snippets',
       \  'coc-vimlsp',
       \  'coc-rust-analyzer',
+      \  'coc-solargraph',
       \ ]
 
 let g:coc_user_config = {
@@ -243,7 +244,7 @@ let g:coc_user_config = {
       \      "rootPatterns": ["go.mod"],
       \      "filetypes": ["go"],
       \      "initializationOptions": {
-      \        "usePlaceholders": "true",
+      \        "usePlaceholders": v:true,
       \        "buildFlags": ["-tags=e2e"]
       \      }
       \    }
@@ -289,7 +290,7 @@ nnoremap <silent> <c-k> :call CocActionAsync('showSignatureHelp')<CR>
 nmap <silent> <leader>rn <Plug>(coc-rename)
 nmap <silent> <leader>= <Plug>(coc-codeaction)
 
-autocmd BufWritePre *.go :call CocAction('runCommand', 'editor.action.organizeImport')
+autocmd BufWritePre *.go :silent call CocAction('runCommand', 'editor.action.organizeImport')
 " }}}
 "
 " vim:foldmethod=marker:foldlevel=0
