@@ -1,47 +1,7 @@
 -- Tanzeeb's NeoVim Configuration
 -- github.com/tanzeeb/nvim
 
--- Plugins {{{
-
--- Auto-Install Plugin Manager {{{
-local execute = vim.api.nvim_command
-local fn = vim.fn
-
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-
-if fn.empty(fn.glob(install_path)) > 0 then
-  fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
-  execute 'packadd packer.nvim'
-end
--- }}}
-
-require('packer').startup({
-  function(use)
-    use {'wbthomason/packer.nvim'}
-
-    use { 'chriskempson/base16-vim' }
-
-    use { 'bronson/vim-trailing-whitespace' }
-    use { 'tpope/vim-repeat' }
-    use { 'tpope/vim-surround' }
-
-    use { 'godlygeek/tabular' }
-    use { 'scrooloose/nerdcommenter' }
-
-    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-    use { 'nvim-treesitter/playground' }
-
-    use { 'neovim/nvim-lspconfig' }
-    use { 'kabouzeid/nvim-lspinstall' }
-  end,
-  config = {
-    display = {
-      non_interactive = true,
-    },
-  },
-})
-
--- }}}
+_G.init = function()
 
 -- General {{{
 vim.o.mouse = 'a'
@@ -118,20 +78,17 @@ require'nvim-treesitter.configs'.setup {
 
 -- LSP {{{
 
-local lspinstall = require('lspinstall')
-
-local languages = {
-  "bash",
-  "go",
-  "lua",
-  "rust",
-  "vim",
+local lsp_installer = require("nvim-lsp-installer")
+local servers = {
+  "bashls",
+  "dockerls",
+  "gopls",
+  "rust_analyzer",
+  "solargraph",
+  "sumneko_lua",
+  "vimls",
+  "yamlls",
 }
-for _,lang in pairs(languages) do
-  if not lspinstall.is_server_installed(lang) then
-    lspinstall.install_server(lang)
-  end
-end
 
 local on_attach = function(client, bufnr)
   local function buf_set_keymap(...) vim.api.nvim_buf_set_keymap(bufnr, ...) end
@@ -139,32 +96,32 @@ local on_attach = function(client, bufnr)
 
   buf_set_option('omnifunc', 'v:lua.vim.lsp.omnifunc')
 
+  -- Mappings.
   local opts = { noremap=true, silent=true }
-
   buf_set_keymap('n', 'gD', '<Cmd>lua vim.lsp.buf.declaration()<CR>', opts)
   buf_set_keymap('n', 'gd', '<Cmd>lua vim.lsp.buf.definition()<CR>', opts)
   buf_set_keymap('n', 'K', '<Cmd>lua vim.lsp.buf.hover()<CR>', opts)
   buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
   buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-  buf_set_keymap('n', '<leader>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<leader>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
-  buf_set_keymap('n', '<leader>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
-  buf_set_keymap('n', '<leader>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-  buf_set_keymap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-  buf_set_keymap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
+  buf_set_keymap('n', '<space>wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>', opts)
+  buf_set_keymap('n', '<space>wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>', opts)
+  buf_set_keymap('n', '<space>D', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
+  buf_set_keymap('n', '<space>rn', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
   buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-  buf_set_keymap('n', '<leader>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
+  buf_set_keymap('n', '<space>e', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>', opts)
   buf_set_keymap('n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>', opts)
   buf_set_keymap('n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>', opts)
-  buf_set_keymap('n', '<leader>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
-  buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+  buf_set_keymap('n', '<space>q', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>', opts)
 
+  -- Set some keybinds conditional on server capabilities
   if client.resolved_capabilities.document_formatting then
-    buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
+    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.formatting()<CR>", opts)
   elseif client.resolved_capabilities.document_range_formatting then
-    buf_set_keymap("n", "<leader>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
+    buf_set_keymap("n", "<space>f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>", opts)
   end
 
+  -- Set autocommands conditional on server_capabilities
   if client.resolved_capabilities.document_highlight then
     vim.api.nvim_exec([[
     augroup lsp_document_highlight
@@ -176,57 +133,29 @@ local on_attach = function(client, bufnr)
   end
 end
 
-local lua_settings = {
-  Lua = {
-    runtime = {
-      version = 'LuaJIT',
-      path = vim.split(package.path, ';'),
-    },
-    diagnostics = {
-      globals = {'vim'},
-    },
-    workspace = {
-      library = {
-        [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-        [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true,
-      },
-    },
-  }
-}
+lsp_installer.on_server_ready(function(server)
+    local opts = {}
 
-local function make_config()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-  capabilities.textDocument.completion.completionItem.snippetSupport = true
-  return {
-    capabilities = capabilities,
-    on_attach = on_attach,
-  }
-end
-
-local function setup_servers()
-  lspinstall.setup()
-
-  local servers = lspinstall.installed_servers()
-  local lspconfig = require('lspconfig')
-
-  for _, server in pairs(servers) do
-    local config = make_config()
-
-    if server == "lua" then
-      config.settings = lua_settings
+    if server.name == "sumneko_lua" then
+      opts = require("lua-dev").setup()
     end
 
-    lspconfig[server].setup(config)
-  end
+    opts.on_attach = on_attach
+
+    server:setup(opts)
+    vim.cmd [[ do User LspAttachBuffers ]]
+end)
+
+for _, name in pairs(servers) do
+	local ok, server = lsp_installer.get_server(name)
+	if ok then
+		if not server:is_installed() then
+			server:install()
+		end
+	end
 end
 
-setup_servers()
-
-lspinstall.post_install_hook = function ()
-  setup_servers()
-  vim.cmd("bufdo e")
-end
-
+-- Run goimports on save {{{
 function OrgImports(wait_ms)
   local params = vim.lsp.util.make_range_params()
   params.context = {only = {"source.organizeImports"}}
@@ -244,6 +173,63 @@ function OrgImports(wait_ms)
 end
 
 vim.api.nvim_command("au BufWritePre *.go lua OrgImports(1000)")
+-- }}}
+
+-- }}}
+
+end
+
+-- Plugins {{{
+
+-- Auto-Install Plugin Manager {{{
+local execute = vim.api.nvim_command
+local fn = vim.fn
+
+local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+
+if fn.empty(fn.glob(install_path)) > 0 then
+  packer_bootstrap = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+end
+-- }}}
+
+require('packer').startup({
+  function(use)
+    use { 'wbthomason/packer.nvim' }
+
+    use { 'chriskempson/base16-vim' }
+
+    use { 'bronson/vim-trailing-whitespace' }
+    use { 'tpope/vim-repeat' }
+    use { 'tpope/vim-surround' }
+
+    use { 'godlygeek/tabular' }
+    use { 'scrooloose/nerdcommenter' }
+
+    use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
+    use { 'nvim-treesitter/playground' }
+
+    use {
+      'neovim/nvim-lspconfig',
+      'williamboman/nvim-lsp-installer',
+      'folke/lua-dev.nvim',
+    }
+
+    if packer_bootstrap then
+      require('packer').sync()
+    end
+  end,
+  config = {
+    display = {
+      non_interactive = true,
+    },
+  },
+})
+
+if packer_bootstrap then
+  vim.cmd [[autocmd User PackerComplete call v:lua.init()]]
+else
+  init()
+end
 
 -- }}}
 
